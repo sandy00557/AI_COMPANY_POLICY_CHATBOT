@@ -38,8 +38,16 @@ import { useState } from "react";
 function App() {
   const [promptText, setPromptText] = useState("");
   const [show, setShow] = useState(false);
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
   function inputText() {
     setShow(true);
+  }
+
+  function inputFile() {
+    setFile((prev) => !prev);
+    const uploadedFiles = e.target.files[0];
+    setPreviewUrl(URL.createObjectURL(uploadedFiles));
   }
   return (
     <>
@@ -53,6 +61,13 @@ function App() {
       <button onClick={inputText}>TEXT</button>
       <h1>{promptText}</h1>
       {show && <>{promptText}</>}
+      <input
+        type="file"
+        accept="application/pdf"
+        disabled={file !== null}
+        onChange={inputFile}
+      />
+      {previewUrl && <iframe src={previewUrl} width="80%" height="80%" />}
     </>
   );
 }
