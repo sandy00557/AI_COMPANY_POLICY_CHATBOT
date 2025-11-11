@@ -2,7 +2,7 @@
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 import "./App.css";
-import { useState } from "react";
+import { useState, useRef } from "react";
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -39,15 +39,57 @@ function App() {
   const [promptText, setPromptText] = useState("");
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = uState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  const fileInputRef = useRef(null);
   function inputText() {
     setShow(true);
   }
 
-  function inputFile() {
+  function inputFile(e) {
     setFile((prev) => !prev);
+    /*
+    What e.target.files actually is
+    When you select a file in <input type="file" />, the browser creates a FileList object.
+    Example:
+    e.target.files
+
+    Might look like this (array-like):
+    FileList { 0: File, 1: File, length: 1 }
+
+    It’s not a plain array, but it behaves similarly: you can access each file using an index.
+    */
     const uploadedFiles = e.target.files[0];
+    /*
+    React calls inputFile(e) and passes the event object.
+    Inside inputFile:
+    const uploadedFiles = e.target.files[0];
+    Grabs the first selected file
+    */
     setPreviewUrl(URL.createObjectURL(uploadedFiles));
+    //it creates a temporary url for the file.
+  }
+
+  function removeFile() {
+    setFile(null);
+    setPreviewUrl(null);
+    if (fileInputRef) {
+      fileInputRef.current.value = "";
+    }
+    /*
+    What happens when you set:
+    fileInputRef.current.value = "";
+
+    This does:
+    ✔ Removes stored file internally
+    ✔ Makes browser think no file is selected
+
+    So the browser goes back to showing its default message:
+    ✅ "No file chosen"
+
+    You are not changing text to “No file chosen”
+    The browser UI resets itself.
+    */
   }
   return (
     <>
@@ -66,8 +108,10 @@ function App() {
         accept="application/pdf"
         disabled={file !== null}
         onChange={inputFile}
+        ref={fileInputRef} //fileInputRef.current will hold the whole <input/>
       />
       {previewUrl && <iframe src={previewUrl} width="80%" height="80%" />}
+      <button onClick={removeFile}>RemoveFile</button>
     </>
   );
 }
