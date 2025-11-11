@@ -39,7 +39,7 @@ function App() {
   const [promptText, setPromptText] = useState("");
   const [show, setShow] = useState(false);
   const [file, setFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewUrl, setPreviewUrl] = uState(null);
   function inputText() {
     setShow(true);
   }
