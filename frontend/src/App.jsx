@@ -2,6 +2,7 @@
 // import reactLogo from "./assets/react.svg";
 // import viteLogo from "/vite.svg";
 import "./App.css";
+import { useState } from "react";
 
 // function App() {
 //   const [count, setCount] = useState(0)
@@ -35,6 +36,24 @@ import "./App.css";
 // export default App
 
 function App() {
-  return <h1>Bye</h1>;
+  const [promptText, setPromptText] = useState("");
+  const [show, setShow] = useState(false);
+  function inputText() {
+    setShow(true);
+  }
+  return (
+    <>
+      <input
+        id="promptInput"
+        type="text"
+        placeholder="Enter your prompt here"
+        value={promptText}
+        onChange={(e) => setPromptText(e.target.value)}
+      />
+      <button onClick={inputText}>TEXT</button>
+      <h1>{promptText}</h1>
+      {show && <>{promptText}</>}
+    </>
+  );
 }
 export default App;
